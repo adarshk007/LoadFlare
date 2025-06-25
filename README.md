@@ -8,6 +8,24 @@ Test your Code with Concurrent Requests.
 ./concurrent_curl.py "curl -X POST -H 'Content-Type: application/json' -d '{\"foo\":\"bar\"}' http://httpbin.org/post" -n 1
 ```
 
+Per-command -n overrides global:
+
+httpbin.org/status/200 runs 10 times.
+
+httpbin.org/delay/1 runs 3 times (default 1 for the other two commands, as no -n is specified).
+
+httpbin.org/get runs 1 time (global default).
+
+httpbin.org/post runs 1 time (global default).
+
+Total requests = 10+3+1+1=15.
+
+```Bash
+./concurrent_load_tester.py "curl http://httpbin.org/status/200" "curl http://httpbin.org/delay/2" -n 5 -c 4
+./concurrent_load_tester.py "curl http://httpbin.org/status/200 -n 10" "curl http://httpbin.org/delay/1 -n 3" "curl http://httpbin.org/get" "curl -X POST -d '{\"foo\":\"bar\"}' http://httpbin.org/post" -c 5
+./concurrent_load_tester.py "curl http://httpbin.org/status/200" "curl http://httpbin.org/status/404"
+```
+
 <h3>Method 1: Making it a Standalone Executable Command (Recommended)</h3>
 
 This is the most common and robust way to turn a script into a command.
